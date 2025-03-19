@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { jwtDecode } from "jwt-decode";
 import { UserContext } from "./contexts/UserContexts";
 import Header from "./components/Header";
+import Episode from "./components/Episode";
 
 function App() {
   const [user, setUser] = useState({});
@@ -41,7 +42,13 @@ function App() {
         itemList.forEach((el) => {
           items.push({
             title: el.querySelector("title").innerHTML,
-            pubDate: new Date(el.querySelector("pubDate").textContent),
+            pubDate: new Date(
+              el.querySelector("pubDate").textContent
+            ).toDateString("en-MY", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            }),
             mp3: el.querySelector("enclosure").getAttribute("url"),
             link: el.querySelector("link").innerHTML,
           });
@@ -57,6 +64,20 @@ function App() {
         setLoggedIn={setLoggedIn}
         signInButton={signInButton}
       />
+      {loggedIn ? (
+        <div className="pl-4 py-4 flex flex-col items-center">
+          <h2 className="text-2xl font-medium">Accidental Tech Podcast</h2>
+          {data.map((ep, i) => (
+            <Episode
+              key={i}
+              title={ep.title}
+              pubDate={ep.pubDate}
+              link={ep.link}
+              mp3={ep.mp3}
+            />
+          ))}
+        </div>
+      ) : null}
     </UserContext.Provider>
   );
 }

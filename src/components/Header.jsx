@@ -31,7 +31,7 @@ const Header = ({loggedIn, setLoggedIn, signInButton}) => {
                     <div ref={signInButton}></div>
                 </div>
             )}
-            <h2 className="text-1xl mt-5 py-2 text-center">Learn With Podcasts</h2>
+            <h2 className="text-3xl mt-5 py-2 text-center">Learn With Podcasts</h2>
         </>
     )
 }
