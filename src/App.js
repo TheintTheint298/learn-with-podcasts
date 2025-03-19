@@ -6,6 +6,8 @@ import Header from "./components/Header";
 function App() {
   const [user, setUser] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
+  const [data, setData] = useState([]);
+  console.log(data);
   const signInButton = useRef();
 
   const handleCallBack = (res) => {
@@ -26,6 +28,28 @@ function App() {
       size: "large",
     });
   }, [loggedIn]);
+
+  const rssFeed = "https://cdn.atp.fm/rss/public?m2swoudx";
+  useEffect(() => {
+    fetch(rssFeed)
+      .then((res) => res.text())
+      .then((str) => {
+        const parser = new window.DOMParser();
+        const data = parser.parseFromString(str, "text/xml");
+        const itemList = data.querySelectorAll("item");
+        const items = [];
+        itemList.forEach((el) => {
+          items.push({
+            title: el.querySelector("title").innerHTML,
+            pubDate: new Date(el.querySelector("pubDate").textContent),
+            mp3: el.querySelector("enclosure").getAttribute("url"),
+            link: el.querySelector("link").innerHTML,
+          });
+        });
+        setData(items);
+      });
+  }, [rssFeed]);
+
   return (
     <UserContext.Provider value={[user, setUser]}>
       <Header
